@@ -87,26 +87,26 @@
                             <m:Button
                                 id="mod_orderEditButton"
                                 text="{i18n>edit}"
-                                enabled="{= ${orderDetail>/status} !== 'COMPLETED' &amp;&amp; ${orderDetail>/status} !== 'CANCELLED' }"
+                                enabled="{= ${auth>/currentUser/permissions/editOrder} &amp;&amp; ${orderDetail>/status} !== 'COMPLETED' &amp;&amp; ${orderDetail>/status} !== 'CANCELLED' }"
                                 press=".onEdit"
                             />
                             <m:Button
                                 id="mod_orderSubmitButton"
                                 text="{i18n>orderDetailSubmit}"
-                                enabled="{orderDetail>/canSubmit}"
+                                enabled="{= ${auth>/currentUser/permissions/editOrder} &amp;&amp; ${orderDetail>/canSubmit} }"
                                 press=".onSubmit"
                             />
                             <m:Button
                                 id="mod_orderCompleteButton"
                                 text="{i18n>orderDetailComplete}"
-                                enabled="{= ${orderDetail>/status} === 'IN_PROCESS' }"
+                                enabled="{= ${auth>/currentUser/permissions/completeOrder} &amp;&amp; ${orderDetail>/status} === 'IN_PROCESS' }"
                                 press=".onComplete"
                             />
                             <m:Button
                                 id="mod_orderCancelButton"
                                 text="{i18n>orderDetailCancel}"
                                 type="Reject"
-                                enabled="{= ${orderDetail>/status} !== 'COMPLETED' &amp;&amp; ${orderDetail>/status} !== 'CANCELLED' }"
+                                enabled="{= ${auth>/currentUser/permissions/cancelOrder} &amp;&amp; ${orderDetail>/status} !== 'COMPLETED' &amp;&amp; ${orderDetail>/status} !== 'CANCELLED' }"
                                 press=".onCancel"
                             />
                             <m:Button
@@ -616,11 +616,13 @@
                                                     <m:Button
                                                         id="mod_operationsAddBtn"
                                                         text="{i18n>orderDetailOperationAdd}"
+                                                        enabled="{auth>/currentUser/permissions/addOperation}"
                                                         press=".onAddOperation"
                                                     />
                                                     <m:Button
                                                         id="mod_operationsBatchEditBtn"
                                                         text="{i18n>orderDetailOperationBatchEdit}"
+                                                        enabled="{auth>/currentUser/permissions/batchEditOperations}"
                                                         press=".onBatchEditOperations"
                                                     />
                                                 </m:OverflowToolbar>
@@ -763,12 +765,14 @@
                                                                 id="mod_opBtnEdit"
                                                                 text="{i18n>orderDetailOperationActionEdit}"
                                                                 class="sapUiTinyMarginEnd"
+                                                                enabled="{auth>/currentUser/permissions/editOrder}"
                                                                 press=".onEditOperation"
                                                             />
                                                             <m:Button
                                                                 id="mod_opBtnDelete"
                                                                 text="{i18n>orderDetailOperationActionDelete}"
                                                                 type="Reject"
+                                                                enabled="{auth>/currentUser/permissions/deleteOperation}"
                                                                 press=".onDeleteOperation"
                                                             />
                                                         </m:HBox>
@@ -830,6 +834,7 @@
                                                     <m:Button
                                                         id="mod_materialsAddBtn"
                                                         text="{i18n>orderDetailMaterialAdd}"
+                                                        enabled="{auth>/currentUser/permissions/addMaterial}"
                                                         press=".onAddMaterial"
                                                     />
                                                 </m:OverflowToolbar>
@@ -1000,6 +1005,7 @@
                                                     <m:Button
                                                         id="mod_techniciansAssignBtn"
                                                         text="{i18n>orderDetailTechnicianAssign}"
+                                                        enabled="{auth>/currentUser/permissions/assignTechnician}"
                                                         press=".onAssignTechnician"
                                                     />
                                                 </m:OverflowToolbar>

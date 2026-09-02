@@ -1,7 +1,48 @@
 {
   "xsappname": "zpm-maintenance-cockpit",
   "tenant-mode": "dedicated",
-  "scopes": [],
+  "description": "Security profile of Maintenance Management Cockpit",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Administrator with full maintenance order and master data write permissions"
+    },
+    {
+      "name": "$XSAPPNAME.User",
+      "description": "Standard user with read-only access to maintenance orders and dashboards"
+    }
+  ],
   "attributes": [],
-  "role-templates": []
+  "role-templates": [
+    {
+      "name": "AdminRoleTemplate",
+      "description": "Administrator Role Template for Maintenance Management Cockpit",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ]
+    },
+    {
+      "name": "UserRoleTemplate",
+      "description": "Standard User Role Template for Maintenance Management Cockpit",
+      "scope-references": [
+        "$XSAPPNAME.User"
+      ]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "Maintenance_Admin_RoleCollection",
+      "description": "Full access to Maintenance Management Cockpit (Create, Edit, Cancel, Operations, Technicians)",
+      "role-template-references": [
+        "$XSAPPNAME.AdminRoleTemplate"
+      ]
+    },
+    {
+      "name": "Maintenance_User_RoleCollection",
+      "description": "Standard read and viewer access to Maintenance Management Cockpit",
+      "role-template-references": [
+        "$XSAPPNAME.UserRoleTemplate"
+      ]
+    }
+  ]
 }
