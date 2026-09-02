@@ -1,0 +1,44 @@
+{
+  "name": "ZPM_MAINTENANCE_COCKPIT",
+  "version": "1.0.0",
+  "description": "SAP CAP Full Stack Maintenance Management Cockpit",
+  "repository": "<none>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^3",
+    "@cap-js/sqlite": "^3",
+    "@sap/cds": "^10",
+    "@sap/xssec": "^4.15.0",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^10",
+    "rimraf": "^5.0.5",
+    "mbt": "^1.2.49"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "undeploy": "cf undeploy ZPM_MAINTENANCE_COCKPIT --delete-services --delete-service-keys --delete-service-brokers"
+  },
+  "cds": {
+    "requires": {
+      "[development]": {
+        "db": {
+          "kind": "sqlite"
+        }
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana"
+        }
+      },
+      "auth": {
+        "kind": "mocked"
+      }
+    }
+  }
+}

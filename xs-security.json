@@ -1,0 +1,7 @@
+{
+  "xsappname": "zpm-maintenance-cockpit",
+  "tenant-mode": "dedicated",
+  "scopes": [],
+  "attributes": [],
+  "role-templates": []
+}

@@ -1,0 +1,69 @@
+_schema-version: 3.3.0
+ID: ZPM_MAINTENANCE_COCKPIT
+version: 1.0.0
+description: "SAP CAP Full Stack Maintenance Management Cockpit"
+
+parameters:
+  enable-parallel-deployments: true
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+        - mkdir -p gen/srv/app
+        - cp -r app/webapp gen/srv/app/
+        - cp app/index.html gen/srv/app/
+
+modules:
+  # ---------------- BACKEND & FIORI UI SERVICE ----------------
+  - name: ZPM_MAINTENANCE_COCKPIT-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      instances: 1
+      memory: 256M
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: ZPM_MAINTENANCE_COCKPIT-auth
+      - name: ZPM_MAINTENANCE_COCKPIT-db
+
+  # ---------------- HANA CLOUD DB DEPLOYER ----------------
+  - name: ZPM_MAINTENANCE_COCKPIT-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 256M
+    requires:
+      - name: ZPM_MAINTENANCE_COCKPIT-db
+
+resources:
+  # ---------------- XSUAA SECURITY ----------------
+  - name: ZPM_MAINTENANCE_COCKPIT-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: ZPM_MAINTENANCE_COCKPIT-${org}-${space}
+        tenant-mode: dedicated
+        oauth2-configuration:
+          credential-types:
+            - "binding-secret"
+            - "x509"
+
+  # ---------------- HANA CLOUD DATABASE (HDI CONTAINER) ----------------
+  - name: ZPM_MAINTENANCE_COCKPIT-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
