@@ -17,6 +17,23 @@ build-parameters:
         - cp app/index.html gen/srv/app/
 
 modules:
+  - name: ZPM_MAINTENANCE_COCKPIT-router
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      memory: 128M
+      disk-quota: 256M
+    build-parameters:
+      builder: npm
+    requires:
+      - name: ZPM_MAINTENANCE_COCKPIT-auth
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+
   # ---------------- BACKEND & FIORI UI SERVICE ----------------
   - name: ZPM_MAINTENANCE_COCKPIT-srv
     type: nodejs
@@ -54,7 +71,7 @@ resources:
       service-plan: application
       path: ./xs-security.json
       config:
-        xsappname: ZPM_MAINTENANCE_COCKPIT-${org}-${space}
+        xsappname: zpm-maintenance-cockpit
         tenant-mode: dedicated
         oauth2-configuration:
           credential-types:
